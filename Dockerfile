@@ -1,4 +1,4 @@
-FROM alpine:3.5
+FROM alpine
 MAINTAINER Cameron Eagans <me@cweagans.net>
 
 # Install needed packages.
