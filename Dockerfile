@@ -11,7 +11,7 @@ MAINTAINER Cameron Eagans <me@cweagans.net>
 RUN apk add --no-cache bash
 
 # Install Unison from source with inotify support + remove compilation tools
-ARG UNISON_VERSION=2.48.4
+ARG UNISON_VERSION=2.51.4
 RUN apk add --no-cache --virtual .build-dependencies build-base curl && \
     apk add --no-cache inotify-tools && \
     apk add --no-cache --repository http://dl-4.alpinelinux.org/alpine/edge/testing/ ocaml && \
