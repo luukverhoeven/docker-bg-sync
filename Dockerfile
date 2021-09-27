@@ -1,5 +1,5 @@
 FROM alpine
-MAINTAINER Cameron Eagans <me@cweagans.net>
+MAINTAINER Luuk Verhoeven (Ldesign Media)
 
 # Install needed packages.
 #RUN apt-get -qq update && \
@@ -12,16 +12,15 @@ RUN apk add --no-cache bash
 
 # Install Unison from source with inotify support + remove compilation tools
 ARG UNISON_VERSION=2.51.4
-RUN apk add --no-cache --virtual .build-dependencies build-base curl && \
-    apk add --no-cache inotify-tools && \
-    apk add --no-cache --repository http://dl-4.alpinelinux.org/alpine/edge/testing/ ocaml && \
-    curl -L https://github.com/bcpierce00/unison/archive/$UNISON_VERSION.tar.gz | tar zxv -C /tmp && \
-    cd /tmp/unison-${UNISON_VERSION} && \
-    sed -i -e 's/GLIBC_SUPPORT_INOTIFY 0/GLIBC_SUPPORT_INOTIFY 1/' src/fsmonitor/linux/inotify_stubs.c && \
-    make UISTYLE=text NATIVE=true STATIC=true && \
-    cp src/unison src/unison-fsmonitor /usr/local/bin && \
-    apk del .build-dependencies ocaml && \
-    rm -rf /tmp/unison-${UNISON_VERSION}
+RUN apk add --no-cache --virtual .build-dependencies build-base curl
+RUN apk add --no-cache inotify-tools
+RUN apk add --no-cache --repository http://dl-4.alpinelinux.org/alpine/edge/testing/ ocaml
+RUN curl -L https://github.com/bcpierce00/unison/archive/refs/tags/v2.51.4.tar.gz | tar zxv -C /tmp
+RUN cd /tmp/unison-${UNISON_VERSION} &&  make UISTYLE=text NATIVE=true STATIC=true
+#RUN sed -i -e 's/GLIBC_SUPPORT_INOTIFY 0/GLIBC_SUPPORT_INOTIFY 1/' src/fsmonitor/linux/inotify_stubs.c
+
+RUN cp /tmp/unison-${UNISON_VERSION}/src/unison /tmp/unison-${UNISON_VERSION}/src/unison-fsmonitor /usr/local/bin
+RUN rm -rf /tmp/unison-${UNISON_VERSION}
 
 ENV HOME="/root" \
     UNISON_USER="root" \
