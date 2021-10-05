@@ -9,24 +9,21 @@ of files that need to be read inside of a container.
 
 This is a basic `docker-compose.yml` that demonstrates usage of this container.
 
-```
-
-version: '2'
-
+```yaml
+version: "2"
 services:
-  web:
-    image: php:7.0-apache
+  webserver:
     volumes:
-      - /var/www/myapp
+        - /var/www/html
 
   bg-sync:
-    image: cweagans/bg-sync
+    image: kitertjuh/docker-bg-sync:arm
     volumes:
-      - .:/source
+      - "${MOODLE_DOCKER_WWWROOT}:/source"
     volumes_from:
-      - web
+      - webserver
     environment:
-      - SYNC_DESTINATION=/var/www/myapp
+      - SYNC_DESTINATION=/var/www/html
       - SYNC_MAX_INOTIFY_WATCHES=40000
       - SYNC_VERBOSE=1
     privileged: true
